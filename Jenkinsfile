@@ -23,17 +23,19 @@ pipeline {
             }
         }
 
-        stage('Terraform Init') {
-            steps {
-                script {
-                    // withCredentials([string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_ACCESS_KEY_ID'),
-                    //                  string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY')]) {
-                    //     sh 'terraform init'
-                    // }
-                    sh 'terraform init'
-                }
-            }
-        }
+       stage('Terraform Init') {
+          steps {
+              script {
+                   sh """
+                    terraform init \
+                    -backend-config='key=envs/${TF_VAR_environment}/terraform.tfstate' \
+                    -backend-config='region=us-east-1' \
+                    -backend-config='bucket=your-bucket-name' \
+                    -backend-config='dynamodb_table=terraform-lock'
+                   """
+                  }
+               }
+           }
 
         stage('Terraform Workspace') {
             steps {
