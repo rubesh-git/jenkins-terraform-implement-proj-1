@@ -23,19 +23,20 @@ pipeline {
             }
         }
 
-       stage('Terraform Init') {
-          steps {
-              script {
-                   sh """
-                    terraform init \
-                    -backend-config='key=envs/${TF_VAR_environment}/terraform.tfstate' \
-                    -backend-config='region=us-east-1' \
-                    -backend-config='bucket=your-bucket-name' \
-                    -backend-config='dynamodb_table=terraform-lock'
-                   """
-                  }
-               }
-           }
+stage('Terraform Init') {
+    steps {
+        script {
+            sh """
+            terraform init \
+              -backend-config='bucket=tf06062025' \
+              -backend-config='key=envs/${TF_VAR_environment}/terraform.tfstate' \
+              -backend-config='region=us-east-1' \
+              -backend-config='encrypt=true' \
+              -backend-config='dynamodb_table=terraform-lock'
+            """
+        }
+    }
+}
 
         stage('Terraform Workspace') {
             steps {
