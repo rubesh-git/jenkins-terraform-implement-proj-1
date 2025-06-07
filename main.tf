@@ -1,5 +1,7 @@
 terraform {
-  backend "s3" {}
+  backend "s3" {
+  # The values are passed in terraform init which is written in Jenkinsfile
+  }
 }
 
 provider "aws" {
